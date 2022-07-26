@@ -21,6 +21,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           always-auth: true
           scope: ${{ github.repository_owner }}
+
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 6.0.2
@@ -30,8 +31,8 @@ jobs:
         id: pnpm-cache
         run: |
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - uses: actions/cache@v3
+          pnpm store path
+      - uses: actions/cache@v2
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
