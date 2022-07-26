@@ -16,7 +16,7 @@
     "pack": "run-s pack:*",
     "pack:build": "pnpm run build",
     "pack:pack": "cd dist && mkdir ./pack && pnpm pack --pack-destination ./pack",
-    "release": "pnpm publish ./dist/pack --access public",
+    "release": "pnpm publish ./dist/pack --access public --publish-branch 'release/latest'",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier --write --ignore-unknown .",
     "pre-commit": "echo pre-commit",
