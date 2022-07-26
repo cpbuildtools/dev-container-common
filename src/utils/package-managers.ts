@@ -160,15 +160,15 @@ export class Package {
   }
 
   private async installNpm() {
-    return await exec(`npm install`);
+    return await this.exec(`npm install`);
   }
 
   private async installYarn() {
-    return await exec(`yarn install`);
+    return await this.exec(`yarn install`);
   }
 
   private async installPnpm() {
-    return await exec(`pnpm install`);
+    return await this.exec(`pnpm install`);
   }
 
   public async add(dep: string, depType: "" | "dev" | "optional") {
@@ -194,7 +194,7 @@ export class Package {
         flag = "--save-optional";
         break;
     }
-    return await exec(`npm i ${dep} ${flag}`);
+    return await this.exec(`npm i ${dep} ${flag}`);
   }
 
   private async addYarn(dep: string, depType: "" | "dev" | "optional") {
@@ -210,7 +210,7 @@ export class Package {
         flag = "-O";
         break;
     }
-    return await exec(`yarn add ${flag} ${dep}`);
+    return await this.exec(`yarn add ${flag} ${dep}`);
   }
 
   private async addPnpm(dep: string, depType: "" | "dev" | "optional") {
@@ -226,7 +226,7 @@ export class Package {
         flag = "-O";
         break;
     }
-    return await exec(`pnpm add ${flag} ${dep}`);
+    return await this.exec(`pnpm add ${flag} ${dep}`);
   }
 
   public async remove(dep: string) {
@@ -241,15 +241,15 @@ export class Package {
   }
 
   private async removeNpm(dep: string) {
-    return await exec(`npm uninstall ${dep}`);
+    return await this.exec(`npm uninstall ${dep}`);
   }
 
   private async removeYarn(dep: string) {
-    return await exec(`yarn remove ${dep}`);
+    return await this.exec(`yarn remove ${dep}`);
   }
 
   private async removePnpm(dep: string) {
-    return await exec(`pnpm remove ${dep}`);
+    return await this.exec(`pnpm remove ${dep}`);
   }
 
   public async run(cmd: string) {
@@ -264,15 +264,19 @@ export class Package {
   }
 
   private async runNpm(cmd: string) {
-    return await exec(`npm run ${cmd}`);
+    return await this.exec(`npm run ${cmd}`);
   }
 
   private async runYarn(cmd: string) {
-    return await exec(`yarn run ${cmd}`);
+    return await this.exec(`yarn run ${cmd}`);
   }
 
   private async runPnpm(cmd: string) {
-    return await exec(`pnpm run ${cmd}`);
+    return await this.exec(`pnpm run ${cmd}`);
+  }
+
+  public async exec(cmd: string) {
+    return await exec(cmd, { cwd: this.path });
   }
 
   private _applyWorkspaceExecuteOptionDefaults(options: WorkspaceExecuteOptions) {
@@ -379,42 +383,16 @@ export class Package {
   }
   public async workspaceExecute(cmd: string, options: WorkspaceExecuteOptions) {
     options = this._applyWorkspaceExecuteOptionDefaults(options);
-    console.log("options:", options);
-    const order = this._buildWorkspaceWalkOrder(options);
-
-    return order;
+    return this.workspaceWalk(async (pkg) => {
+      return await pkg.exec(cmd);
+    }, options);
   }
 
   public workspaceRun(cmd: string, options: WorkspaceRunOptions) {
-    options = {
-      order: "sequential",
-      dependenciesToOrder: true,
-      ...options,
-    };
-
-    if (options.dependenciesToOrder === true) {
-      options.dependenciesToOrder = {
-        dependencies: true,
-        peerDependencies: true,
-        devDependencies: true,
-        optionalDependencies: true,
-      };
-    } else if (options.dependenciesToOrder === true) {
-      options.dependenciesToOrder = {
-        dependencies: false,
-        peerDependencies: false,
-        devDependencies: false,
-        optionalDependencies: false,
-      };
-    } else {
-      options.dependenciesToOrder = {
-        dependencies: true,
-        peerDependencies: true,
-        devDependencies: true,
-        optionalDependencies: true,
-        ...options.dependenciesToOrder,
-      };
-    }
+    options = this._applyWorkspaceExecuteOptionDefaults(options);
+    return this.workspaceWalk(async (pkg) => {
+      return await pkg.run(cmd);
+    }, options);
   }
 }
 
@@ -449,10 +427,7 @@ export interface WorkspaceOrderOptions {
   include: PackageDependencyInclusionOptions;
 }
 
-export interface WorkspaceRunOptions {
-  order?: "sequential" | "parallel" | "dependencySequential" | "dependencyParallel";
-  dependenciesToOrder?: boolean | PackageDependencyInclusionOptions;
-}
+export interface WorkspaceRunOptions extends WorkspaceExecuteOptions {}
 
 export interface PackageDependencyInclusionOptions {
   dependencies?: boolean;
