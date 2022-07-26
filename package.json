@@ -15,7 +15,7 @@
     "build:copy-package": "ts-node .scripts/copy-package.ts",
     "pack": "run-s pack:*",
     "pack:build": "pnpm run build",
-    "pack:pack": "cd dist && pnpm pack --pack-destination ./pack",
+    "pack:pack": "cd dist && mkdir ./pack && pnpm pack --pack-destination ./pack",
     "release": "pnpm publish ./dist/pack --access public",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier --write --ignore-unknown .",
