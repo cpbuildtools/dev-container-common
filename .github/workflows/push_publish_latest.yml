@@ -67,9 +67,6 @@ jobs:
       - name: Init
         run: pnpm i --ignore-scripts
 
-      - name: Production Build
-        run: pnpm run pack
-
       - name: Publish Libraries
         env:
           GITHUB_TOKEN: ${{ github.token }}
