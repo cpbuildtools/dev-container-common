@@ -49,3 +49,6 @@ jobs:
 
       - name: Build
         run: pnpm run pack
+
+      - name: Result
+        run: ls -al ./dist
