@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { DepGraph } from "dependency-graph";
 import glob from "fast-glob";
 import { existsSync } from "fs";
@@ -252,14 +253,38 @@ export class Package {
     return await this.exec(`pnpm remove ${dep}`);
   }
 
-  public async run(cmd: string) {
+  private hasScript(scriptName: string) {
+    return this.data.scripts?.[scriptName]?.trim() || false;
+  }
+
+  public async run(scriptName: string, skipMissing: boolean = true) {
+    if (!this.hasScript(scriptName)) {
+      if (skipMissing) {
+        console.info(chalk.gray(`\n${chalk.yellow(this.name)} doesn't have a script named '${chalk.cyanBright(scriptName)}'. skipping...`));
+        return;
+      }
+      console.error(
+        `\n${chalk.bgRed(" ERROR ")} ${chalk.yellow(this.name)} dose not have a script named '${chalk.cyanBright(scriptName)}'`
+      );
+      throw 1;
+    }
+
+    console.info(chalk.green(`\nRunning ${chalk.yellow(this.name)} > ${chalk.cyanBright(scriptName)}`));
+    let code = 0;
     switch (this._packageManager) {
       case "npm":
-        return await this.runNpm(cmd);
+        code = await this.runNpm(scriptName);
       case "yarn":
-        return await this.runYarn(cmd);
+        code = await this.runYarn(scriptName);
       case "pnpm":
-        return await this.runPnpm(cmd);
+        code = await this.runPnpm(scriptName);
+    }
+
+    if (code !== 0) {
+      console.error(
+        `\n${chalk.bgRed(" ERROR ")} ${chalk.yellow(this.name)} > ${chalk.cyanBright(scriptName)} failed with exit code: ${chalk.red(code)}`
+      );
+      throw code;
     }
   }
 
