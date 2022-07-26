@@ -31,10 +31,6 @@ jobs:
         id: pnpm-cache
         run: |
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-          echo " "
-          echo " --- "
-          echo "$(pnpm store path)"
-          echo " --- "
 
       - uses: actions/cache@v2
         name: Setup pnpm cache
