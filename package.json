@@ -10,7 +10,7 @@
     "fix": "run-s fix:*",
     "fix:prettier": "prettier --write .",
     "pre-commit": "run-s pre-commit:*",
-    "pre-commit:lint": "echo lint-staged"
+    "pre-commit:lint": "lint-staged"
   },
   "devDependencies": {
     "@types/node": "^18.6.1",
