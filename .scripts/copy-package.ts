@@ -5,7 +5,7 @@ import { readJsonFile, writeJsonFile } from "../src/utils/json";
   const pkg = (await readJsonFile("package.json")) as PackageJson;
   delete pkg.devDependencies;
   delete pkg.scripts;
-  delete pkg["lint-staged"];
+  delete (pkg as any)["lint-staged"];
 
   await writeJsonFile("dist/package.json", pkg, 2);
 })();
