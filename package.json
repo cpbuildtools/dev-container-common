@@ -2,7 +2,7 @@
   "name": "@cpbuildtools/dev-container-common",
   "repository": "https://github.com/cpbuildtools/dev-container-common",
   "scripts": {
-    "prepare": "run-s prepare:*",
+    "prepare": "run-s prepare:* && husky install",
     "prepare:husky": "husky install",
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.6.1",
-    "husky": "^8.0.1",
+    "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
     "npm-run-all2": "^6.0.1",
     "prettier": "^2.7.1",
@@ -26,5 +26,4 @@
   "lint-staged": {
     "*.format:*": "prettier --write"
   }
-
 }
