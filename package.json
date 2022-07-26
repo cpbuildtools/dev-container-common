@@ -7,9 +7,10 @@
   "scripts": {
     "prepare": "run-s prepare:* && husky install",
     "prepare:husky": "husky install",
-    "build": "run-p build:*",
-    "build:main": "tsc -p tsconfig.json",
-    "build:module": "tsc -p tsconfig.module.json",
+    "build": "run-s build:*",
+    "build:ts": "run-p build:ts:*",
+    "build:ts:main": "tsc -p tsconfig.json",
+    "build:ts:module": "tsc -p tsconfig.module.json",
     "build:ll": "ls -al",
     "build:copy-package": "ts-node .scripts/copy-package.ts",
     "build:ll2": "ls -al",
