@@ -24,6 +24,6 @@
     "access": "public"
   },
   "lint-staged": {
-    "*.format:*": "prettier --write"
+    "*": "prettier --write --ignore-unknown"
   }
 }
