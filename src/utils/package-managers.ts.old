@@ -257,8 +257,10 @@ export class Package {
     return this.data.scripts?.[scriptName]?.trim() || false;
   }
 
-  public async run(scriptName: string, skipMissing: boolean = true) {
-    if (!this.hasScript(scriptName)) {
+  public async run(script: string, skipMissing: boolean = true) {
+    const scriptName: string = script.split(/\s/, 1)[0].trim();
+
+    if (!this.hasScript(scriptName.split(/\s/, 1)[0].trim())) {
       if (skipMissing) {
         console.info(chalk.gray(`\n${chalk.yellow(this.name)} doesn't have a script named '${chalk.cyanBright(scriptName)}'. skipping...`));
         return;
@@ -269,15 +271,15 @@ export class Package {
       throw 1;
     }
 
-    console.info(chalk.green(`\nRunning ${chalk.yellow(this.name)} > ${chalk.cyanBright(scriptName)}`));
+    console.info(chalk.green(`\nRunning ${chalk.yellow(this.name)} > ${chalk.cyanBright(script)}`));
     let code = 0;
     switch (this._packageManager) {
       case "npm":
-        code = await this.runNpm(scriptName);
+        code = await this.runNpm(script);
       case "yarn":
-        code = await this.runYarn(scriptName);
+        code = await this.runYarn(script);
       case "pnpm":
-        code = await this.runPnpm(scriptName);
+        code = await this.runPnpm(script);
     }
 
     if (code !== 0) {
@@ -301,6 +303,7 @@ export class Package {
   }
 
   public async exec(cmd: string) {
+    console.info(chalk.blueBright(`\n[${chalk.yellowBright(this.name)}] Executing: ${chalk.gray(cmd)}`))
     return await exec(cmd, { cwd: this.path });
   }
 
@@ -358,7 +361,7 @@ export class Package {
         packages = q.select((p) => [p]).toArray();
       }
     }
-
+    console.log(packages);
     return packages;
   }
 

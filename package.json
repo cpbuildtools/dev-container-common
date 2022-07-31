@@ -25,7 +25,9 @@
     "fix:prettier": "prettier --write --ignore-unknown .",
     "pre-commit": "echo pre-commit",
     "watch:build": "tsc -p tsconfig.json -w",
-    "reset-hard": "git clean -dfx && git reset --hard && pnpm i"
+    "reset-hard": "git clean -dfx && git reset --hard && pnpm i",
+    "start": "run-p start:*",
+    "start:build": "pnpm run watch:build"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.1",

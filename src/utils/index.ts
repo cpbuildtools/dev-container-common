@@ -4,7 +4,6 @@ export * from "./env";
 export * from "./git";
 export * from "./github";
 export * from "./json";
-export * from "./package-managers";
 export * from "./reboot";
 export * from "./sleep";
 export * from "./strings";
