@@ -141,19 +141,23 @@ export abstract class Package implements IPackageHandler {
   }
 
   private async _workspaceQueryFactory() {
+    console.log("_workspaceQueryFactory", this.workspaces);
     const base = Enumerable.from(
       Array.isArray(this.workspaces)
         ? (this.data.workspaces as string[])
         : Array.isArray(this.workspaces.packages)
         ? this.workspaces.packages
         : []
-    ).select((p) => glob(p, { cwd: this.path, onlyDirectories: true }));
+    ).select((p) => {
+      const result = glob(p, { cwd: this.path, onlyDirectories: true });
+      return result;
+    });
 
     const packages = Enumerable.from(
       await Promise.all(
         Enumerable.from(await Promise.all(base.toArray()))
           .selectMany((paths) => paths)
-          .select((p) => Path.join(this.path, p))
+          .select((p) => (Path.isAbsolute(p) ? p : Path.join(this.path, p)))
           .where((p) => FsSync.existsSync(Path.join(p, "package.json")))
           .select((p) => PackageManager.loadPackage(p))
       )
