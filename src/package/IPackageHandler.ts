@@ -36,6 +36,13 @@ export interface IPackageHandler {
     results: WorkspaceCallSuccess<T>[];
   }>;
 
+  install(): Promise<number>;
+  workspaceInstall(options: Partial<WorkspaceSortingOptions & RunScriptOptions>): Promise<{
+    hasErrors: boolean;
+    errors: WorkspaceCallError[];
+    results: WorkspaceCallSuccess<number | undefined>[];
+  }>;
+
   readonly name?: string;
   readonly dependencies: PackageJson.Dependency;
   readonly devDependencies: PackageJson.Dependency;

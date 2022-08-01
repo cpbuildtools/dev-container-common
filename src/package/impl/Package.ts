@@ -325,4 +325,14 @@ export abstract class Package implements IPackageHandler {
   protected logError(msg: string) {
     console.error(`${chalk.bgRed.white.bold(" ERROR ")} ${this.printLog(msg)}`);
   }
+
+  public async install() {
+    return await this.execPackageManager("install");
+  }
+
+  public async workspaceInstall(options: Partial<WorkspaceSortingOptions & RunScriptOptions>) {
+    return this.workspaceCall(async (pkg) => {
+      return await pkg.install();
+    }, options);
+  }
 }
