@@ -141,7 +141,6 @@ export abstract class Package implements IPackageHandler {
   }
 
   private async _workspaceQueryFactory() {
-    console.log("_workspaceQueryFactory", this.workspaces);
     const base = Enumerable.from(
       Array.isArray(this.workspaces)
         ? (this.data.workspaces as string[])
