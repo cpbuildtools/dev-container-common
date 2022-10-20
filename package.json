@@ -1,6 +1,6 @@
 {
   "name": "@cpbuildtools/dev-container-common",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "repository": "https://github.com/cpbuildtools/dev-container-common",
   "main": "main/index.js",
   "typings": "main/index.d.ts",
